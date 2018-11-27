@@ -181,4 +181,4 @@ def game_loop():
 game_intro()
 game_loop()
 pygame.quit()
-
+quit()
