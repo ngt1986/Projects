@@ -6,7 +6,7 @@ import numpy as np
 pygame.init()
 
 #Grid Size and game board initialize
-grid_n = 15
+grid_n = 3
 game_board = [""] * (grid_n+grid_n-1)
 for i in range (grid_n+grid_n-1):
     game_board[i] = [" "] * (grid_n+grid_n-1)
@@ -22,29 +22,31 @@ for i in range(0,grid_n+grid_n-1):
 #Window Size
 display_width = 800
 display_height = display_width
-#display_margin_height = 50
-#display_margin_width = 50
 display_margin_height = display_height/grid_n/2
 display_margin_width = display_width/grid_n/2
 
+
 #text sizes
-player_turn_display_size = display_height/grid_n/4
+player_turn_display_size = display_height/grid_n/3
 box_initial_size = display_margin_height/2
 
 #Dot and line Sizes
-dot_size = 5
+dot_size = 20-grid_n
 line_size = dot_size/2
 
-#Players 1 and 2 initials
-# player_1 = input("Player 1 type first initial: ")
-# player_2 = input("Player 2 type first initial: ")
+#Players 1 and 2 Names
+# player_1 = input("Player 1 type name: ")
+# player_2 = input("Player 2 type name: ")
 player_1 = "Nick"
 player_2 = "Laura"
+
+#randomize starting player
 rand = random.randint(0,99)
 if rand > 49:
     player_turn = player_1
 else:
     player_turn = player_2
+
 #colors
 black = (0,0,0)
 white = (255,255,255)
@@ -59,7 +61,7 @@ bright_yellow = (255, 255, 0)
 gray = (130,130,130)
 
 DISPLAYSURF = pygame.display.set_mode((display_width,display_height))
-pygame.display.set_caption('Dots!')
+pygame.display.set_caption('Dots! - ' + player_turn + " 's turn.")
 
 def text_objects(text, font, color):
     textSurface = font.render(text, True, color)
@@ -105,7 +107,7 @@ def player_display(player_turn):
     """displays who's turn it is"""
     largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size))
     TextSurf, TextRect = text_objects(player_turn + "'s turn.", largeText, white)
-    TextRect.center = (display_width/2,display_margin_height/2)
+    TextRect.center = (display_width/2,display_margin_height/3)
     DISPLAYSURF.blit(TextSurf, TextRect)
     return
 
@@ -136,21 +138,21 @@ def box_letter():
                 largeText = pygame.font.SysFont("comicsansms", int(box_initial_size))
                 TextSurf, TextRect = text_objects(player_1[0], largeText, white)
                 TextRect.center = ((column+1)/2 * (display_width / grid_n),
-                                   (row+1)/2 * (display_height / grid_n))
+                                   (row+1)/2 * (display_height / grid_n)+display_margin_height/2)
                 DISPLAYSURF.blit(TextSurf, TextRect)
             elif game_board[row][column] == player_2:
                 largeText = pygame.font.SysFont("comicsansms", int(box_initial_size))
                 TextSurf, TextRect = text_objects(player_2[0], largeText, white)
                 TextRect.center = ((column + 1) / 2 * (display_width / grid_n),
-                                       (row + 1) / 2 * (display_height / grid_n))
+                                       (row + 1) / 2 * (display_height / grid_n)+display_margin_height/2)
                 DISPLAYSURF.blit(TextSurf, TextRect)
 
 def draw_dots():
     """Draws the dots on the board"""
     for row in range(0, grid_n):
         for column in range(0, grid_n):
-            pygame.draw.circle(DISPLAYSURF, green, (int((row + 1) * (display_height) / grid_n - display_margin_height),
-                        int((column + 1) * (display_width) / grid_n - display_margin_width)), dot_size)
+            pygame.draw.circle(DISPLAYSURF, green, (int((column + 1) * (display_width) / grid_n - display_margin_width),
+                        int((row + 1) * (display_height) / grid_n - display_margin_height/2)), dot_size)
 
 def game_over():
     """check if all squares are filled"""
@@ -171,19 +173,19 @@ def game_over_screen():
             elif game_board[row][column] == player_2:
                 count_player2 += 1
     if count_player1 > count_player2:
-        largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size))
-        TextSurf, TextRect = text_objects("PLAYER " + player_1 + " WINS!", largeText, white)
-        TextRect.center = (display_width/2,display_height - display_margin_height/2)
+        largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size/2))
+        TextSurf, TextRect = text_objects(player_1 + " WINS!", largeText, bright_yellow)
+        TextRect.center = (display_width/2,display_height/2)
         DISPLAYSURF.blit(TextSurf, TextRect)
     elif count_player2 > count_player1:
-        largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size))
-        TextSurf, TextRect = text_objects("PLAYER " + player_2 + " WINS!", largeText, white)
-        TextRect.center = (display_width / 2, display_height - display_margin_height/2)
+        largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size/2))
+        TextSurf, TextRect = text_objects(player_2 + " WINS!", largeText, bright_yellow)
+        TextRect.center = (display_width / 2, display_height/2)
         DISPLAYSURF.blit(TextSurf, TextRect)
     else:
-        largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size))
-        TextSurf, TextRect = text_objects("GAME ENDS IN A DRAW!", largeText, white)
-        TextRect.center = (display_width / 2, display_height - display_margin_height/2)
+        largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size/2))
+        TextSurf, TextRect = text_objects("GAME ENDS IN A DRAW!", largeText, bright_yellow)
+        TextRect.center = (display_width / 2, display_height/2)
         DISPLAYSURF.blit(TextSurf, TextRect)
 
 def main_loop():
@@ -210,29 +212,30 @@ def main_loop():
                 #HORIZONTAL
                 if column < grid_n-1 and row < grid_n and game_board[row+row][column+column+1] == " ":
                     draw_lines((display_margin_width+column*(display_width/grid_n)+dot_size),
-                                (display_margin_height+row*(display_height/grid_n)-dot_size),
+                                (display_margin_height*1.5+row*(display_height/grid_n)-dot_size),
                                 display_width/grid_n-dot_size*2,dot_size*2,black,gray,row,column)
                 #VERTICAL
                 # if no line is drawn yet
                 if row < grid_n-1 and column < grid_n and game_board[row+row+1][column+column] == " ":
                     draw_lines((display_margin_width+column*(display_width/grid_n)-dot_size),
-                                (display_margin_height+row*(display_height/grid_n)+dot_size),dot_size*2,
+                                (display_margin_height*1.5+row*(display_height/grid_n)+dot_size),dot_size*2,
                                 display_width/grid_n-dot_size*2,black,gray,row,column)
 
                 #if line is drawn already
                 #HORIZONTAL
                 if column < grid_n-1 and row < grid_n and game_board[row + row][column + column + 1] == "-":
                     line_drawn((display_margin_width + column * (display_width / grid_n) + dot_size),
-                               (display_margin_height + row * (display_height / grid_n) - line_size/2),
+                               (display_margin_height*1.5 + row * (display_height / grid_n) - line_size/2),
                                display_width / grid_n - dot_size * 2, line_size, blue)
                 #VERTICAL
                 if row < grid_n-1 and column < grid_n and game_board[row+row+1][column+column] == "|":
                     line_drawn((display_margin_width+column*(display_width/grid_n)-line_size/2),
-                            (display_margin_height+row*(display_height/grid_n)+dot_size),line_size,
+                            (display_margin_height*1.5+row*(display_height/grid_n)+dot_size),line_size,
                             display_width/grid_n-dot_size*2,blue)
         box_letter()
         player_display(player_turn)
         pygame.display.update()
+        pygame.display.set_caption('Dots! - ' + player_turn + " 's turn.")
         if game_over():
             break
 
