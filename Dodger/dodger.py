@@ -382,7 +382,7 @@ def main_loop(difficulty):
         for enemy in enemies:
             if enemy.x < 0-enemy.width or enemy.x > display_width or enemy.y < 0-enemy.width or enemy.y > display_height:
                 enemies.remove(enemy)
-        print(len(enemies))
+        #print(len(enemies))
         
         #update enemy positions    
         for enemy in enemies:
