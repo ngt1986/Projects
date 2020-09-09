@@ -31,7 +31,7 @@ player_turn_display_size = display_height/grid_n/3
 box_initial_size = display_margin_height/2
 
 #Dot and line Sizes
-dot_size = 20-grid_n
+dot_size = int(4+(30/grid_n))
 line_size = dot_size/2
 
 #Players 1 and 2 Names
@@ -196,8 +196,6 @@ def main_loop():
         #allow exit command (clickling 'red' x, for example) to quit the program
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                for row in range(0, grid_n + grid_n - 1):
-                    print(game_board[row])
                 pygame.quit()
                 quit()
         #draw the dots, which never change
