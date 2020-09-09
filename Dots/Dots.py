@@ -16,15 +16,12 @@ for i in range(0,grid_n+grid_n-1):
     for j in range(0,grid_n+grid_n-1):
         if i % 2 == 0 and j % 2 == 0:
             game_board[i][j] = "o"
-# for row in range(0,grid_n+grid_n-1):
-#     print(game_board[row])
 
 #Window Size
 display_width = 800
 display_height = display_width
 display_margin_height = display_height/grid_n/2
 display_margin_width = display_width/grid_n/2
-
 
 #text sizes
 player_turn_display_size = display_height/grid_n/3
@@ -188,7 +185,7 @@ def game_over_screen():
         TextRect.center = (display_width / 2, display_height/2)
         DISPLAYSURF.blit(TextSurf, TextRect)
 
-def main_loop():
+def main():
     """Main game loop."""
     game_exit = False
     while not game_exit: #event handling
@@ -237,7 +234,8 @@ def main_loop():
         if game_over():
             break
 
-main_loop()
+if __name__ == '__main__':
+    main()
 
 #if game_over() == True
 game_over_screen()
