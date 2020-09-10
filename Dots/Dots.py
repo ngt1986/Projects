@@ -1,7 +1,4 @@
-import pygame, time, sys, random
-from pygame.locals import *
-import numpy as np
-#from PIL import Image
+import pygame, random
 
 pygame.init()
 
