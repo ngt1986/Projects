@@ -3,7 +3,7 @@ import pygame, random
 pygame.init()
 
 #Grid Size and game board initialize
-grid_n = 3
+grid_n = int(input("Enter n for an n x n grid size: "))
 game_board = [""] * (grid_n+grid_n-1)
 for i in range (grid_n+grid_n-1):
     game_board[i] = [" "] * (grid_n+grid_n-1)
@@ -29,10 +29,8 @@ dot_size = int(4+(30/grid_n))
 line_size = dot_size/2
 
 #Players 1 and 2 Names
-# player_1 = input("Player 1 type name: ")
-# player_2 = input("Player 2 type name: ")
-player_1 = "Nick"
-player_2 = "Laura"
+player_1 = input("Player 1 type name: ")
+player_2 = input("Player 2 type name: ")
 
 #randomize starting player
 rand = random.randint(0,99)
