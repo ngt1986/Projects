@@ -1,5 +1,4 @@
 import pygame, random
-
 pygame.init()
 
 #Grid Size and game board initialize
