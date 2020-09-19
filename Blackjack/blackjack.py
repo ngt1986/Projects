@@ -18,6 +18,7 @@ def deckQty():
 
 def buildDeck(numDecks):  # construct the deck based on how many player wants to play with
     deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 'A'] * 4 * numDecks
+    #deck = [2, 3, 4,'A', 'A', 'A', 'A', 'A'] * 4 * numDecks
     deck = [str(i) for i in deck]
     return deck
 
@@ -249,11 +250,11 @@ while gameIsPlaying == True:
             elif choice == 'p' and split == False:
                 split = True
                 if playerHand[0] == '1':
-                    print('You have split your Aces.')
-                    print("Playing on first Ace.")
+                    print('\n' + 'You have split your Aces.')
+                    print("Playing on first Ace." + '\n')
                 else:
-                    print('You have split your ' + str(playerHand[0]) + "'s.")
-                    print("Playing on first " + str(playerHand[0]) + ".")
+                    print('\n' +'You have split your ' + str(playerHand[0]) + "'s.")
+                    print("Playing on first " + str(playerHand[0]) + "." + '\n')
                 playerHand_2 = []
                 playerHand_2.append(playerHand[1])
                 playerHand.remove(playerHand[1])
@@ -266,7 +267,7 @@ while gameIsPlaying == True:
         if playerTotal > 21:
             print('You Bust!' + '\n')
             chipCount -= int(bet)
-            print('Chip count is : ' + str(chipCount))
+            print('You lost ' + str(bet) + '!' + '\n')
             if split == False:
                 continue
 
@@ -300,12 +301,12 @@ while gameIsPlaying == True:
                     break
 
         # final player (2nd split) hand value after action
-        playerTotal = checkTotal(playerHand)
         if split == True:
             playerTotal_2 = checkTotal(playerHand_2)
             print('Second Split Hand: You have ' + str(playerTotal_2) + '\n')
             if playerTotal_2 > 21:
                 print('Second Split Hand: You Bust!' + '\n')
+                print('You lose ' + str(bet) + '!' + '\n')
                 chipCount -= int(bet)
                 split = False
                 continue
@@ -330,29 +331,31 @@ while gameIsPlaying == True:
         if computerTotal > 21:
             print('Dealer hand: ')
             showHand(computerHand)
-            print('Dealer busts at ' + str(computerTotal) + '! You Win!')
-            chipCount += int(bet)
+            print('Dealer busts at ' + str(computerTotal) + '! You Won ' + str(bet) + '!' + '\n')
+            if playerTotal <=21:
+                chipCount += int(bet)
             if split == True and playerTotal_2 <= 21:
                 chipCount += int(bet)
                 split = False
             continue
 
         # check the winner
-        if split == True and playerTotal <= 21:
-            if playerTotal > computerTotal:
-                print('First Split Hand: You win!' + '\n')
-                chipCount += int(bet)
-            elif playerTotal < computerTotal:
-                print('First Split Hand: You lose!' + '\n')
-                chipCount -= int(bet)
-            else:
-                print("First Split Hand: Hand is a push." + '\n')
+        if split == True:
+            if playerTotal <= 21:
+                if playerTotal > computerTotal:
+                    print('First Split Hand: You Won ' + str(bet) + '!' + '\n')
+                    chipCount += int(bet)
+                elif playerTotal < computerTotal:
+                    print('First Split Hand: You lose ' + str(bet) + '!' + '\n')
+                    chipCount -= int(bet)
+                else:
+                    print("First Split Hand: Hand is a push." + '\n')
 
             if playerTotal_2 > computerTotal and playerTotal_2 <= 21:
-                print('Second Split Hand: You win!' + '\n')
+                print('Second Split Hand: You Won ' + str(bet) + '!' + '\n')
                 chipCount += int(bet)
             elif playerTotal_2 < computerTotal:
-                print('Second Split Hand: You lose!' + '\n')
+                print('Second Split Hand: You lose ' + str(bet) + '!' + '\n')
                 chipCount -= int(bet)
             else:
                 print("Second Split Hand: Hand is a push." + '\n')
@@ -360,10 +363,10 @@ while gameIsPlaying == True:
 
         else:
             if playerTotal > computerTotal:
-                print('You win!' + '\n')
+                print('You Won ' + str(bet) + '!' + '\n')
                 chipCount += int(bet)
             elif playerTotal < computerTotal:
-                print('You lose!' + '\n')
+                print('You lose ' + str(bet) + '!' + '\n')
                 chipCount -= int(bet)
             else:
                 print("Hand is a push." + '\n')
