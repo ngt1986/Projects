@@ -65,12 +65,12 @@ def draw_lines(x,y,w,h,inactive_color,active_color,row,column):
 
     #if mouse is over line option
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
-        pygame.draw.rect(DISPLAYSURF,active_color,(x,y,w,h))
+        pygame.draw.rect(DISPLAYSURF,active_color,(int(x),int(y),int(w),int(h)))
 
         #if clicked a horizontal line which has height dot_size*2
         if click[0] and h == dot_size*2:
             game_board[row+row][column+column+1] = "-"
-            pygame.draw.rect(DISPLAYSURF, inactive_color, (x, y, w, h))
+            pygame.draw.rect(DISPLAYSURF, inactive_color, (int(x),int(y),int(w),int(h)))
             if makes_box(player_turn,row,column,h) == False:
                 swap_player()
             else:
@@ -79,7 +79,7 @@ def draw_lines(x,y,w,h,inactive_color,active_color,row,column):
         #if clicked a vertical line which has width dot_size*2
         elif click[0] and w == dot_size*2:
             game_board[row+row+1][column+column] = "|"
-            pygame.draw.rect(DISPLAYSURF, inactive_color, (x, y, w, h))
+            pygame.draw.rect(DISPLAYSURF, inactive_color, (int(x),int(y),int(w),int(h)))
             if makes_box(player_turn, row, column, h) == False:
                 swap_player()
             else:
@@ -87,18 +87,18 @@ def draw_lines(x,y,w,h,inactive_color,active_color,row,column):
 
     #if mouse not over line option
     else:
-        pygame.draw.rect(DISPLAYSURF, inactive_color, (x,y,w,h))
+        pygame.draw.rect(DISPLAYSURF, inactive_color, (int(x),int(y),int(w),int(h)))
 
 def line_drawn(x,y,w,h, active_color):
     """draws lines that have been chosen by players"""
-    pygame.draw.rect(DISPLAYSURF, active_color, (x, y, w, h))
+    pygame.draw.rect(DISPLAYSURF, active_color, (int(x),int(y),int(w),int(h)))
     return
 
 def player_display(player_turn):
     """displays who's turn it is"""
     largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size))
     TextSurf, TextRect = text_objects(player_turn + "'s turn.", largeText, white)
-    TextRect.center = (display_width/2,display_margin_height/3)
+    TextRect.center = (int(display_width/2),int(display_margin_height/3))
     DISPLAYSURF.blit(TextSurf, TextRect)
     return
 
@@ -128,14 +128,14 @@ def box_letter():
             if game_board[row][column] == player_1:
                 largeText = pygame.font.SysFont("comicsansms", int(box_initial_size))
                 TextSurf, TextRect = text_objects(player_1[0], largeText, white)
-                TextRect.center = ((column+1)/2 * (display_width / grid_n),
-                                   (row+1)/2 * (display_height / grid_n)+display_margin_height/2)
+                TextRect.center = (int((column+1)/2 * (display_width / grid_n)),
+                                   int((row+1)/2 * (display_height / grid_n)+display_margin_height/2))
                 DISPLAYSURF.blit(TextSurf, TextRect)
             elif game_board[row][column] == player_2:
                 largeText = pygame.font.SysFont("comicsansms", int(box_initial_size))
                 TextSurf, TextRect = text_objects(player_2[0], largeText, white)
-                TextRect.center = ((column + 1) / 2 * (display_width / grid_n),
-                                       (row + 1) / 2 * (display_height / grid_n)+display_margin_height/2)
+                TextRect.center = (int((column + 1) / 2 * (display_width / grid_n)),
+                                       int((row + 1) / 2 * (display_height / grid_n)+display_margin_height/2))
                 DISPLAYSURF.blit(TextSurf, TextRect)
 
 def draw_dots():
@@ -166,17 +166,17 @@ def game_over_screen():
     if count_player1 > count_player2:
         largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size/2))
         TextSurf, TextRect = text_objects(player_1 + " WINS!", largeText, bright_yellow)
-        TextRect.center = (display_width/2,display_height/2)
+        TextRect.center = (int(display_width/2),int(display_height/2))
         DISPLAYSURF.blit(TextSurf, TextRect)
     elif count_player2 > count_player1:
         largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size/2))
         TextSurf, TextRect = text_objects(player_2 + " WINS!", largeText, bright_yellow)
-        TextRect.center = (display_width / 2, display_height/2)
+        TextRect.center = (int(display_width/2),int(display_height/2))
         DISPLAYSURF.blit(TextSurf, TextRect)
     else:
         largeText = pygame.font.SysFont("comicsansms", int(player_turn_display_size/2))
         TextSurf, TextRect = text_objects("GAME ENDS IN A DRAW!", largeText, bright_yellow)
-        TextRect.center = (display_width / 2, display_height/2)
+        TextRect.center = (int(display_width/2),int(display_height/2))
         DISPLAYSURF.blit(TextSurf, TextRect)
 
 def main():
