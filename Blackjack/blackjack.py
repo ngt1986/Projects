@@ -67,6 +67,20 @@ def playerAction(playerHand, chipCount, bet):
                 else:
                     break
         return choice
+    elif playerHand == ['1','A'] and split == False: # special case for [A,A] since checkTotal has some weird ace logic in there
+        while True:
+            choice = input('\n' + 'What would you like to do?' + '\n' +
+                           '(H = hit, S = stand, P = Split, D = Double down): ').lower()
+            if choice in ['h', 's', 'p', 'd']:
+                if choice == 'd' and (bet + bet > chipCount):  # can't double if you don't have the dough
+                    print('Insufficient chips to Double Down!')
+                    continue
+                elif choice == 'p' and (bet + bet > chipCount):  # can't double if you don't have the dough
+                    print('Insufficient chips to Split!')
+                    continue
+                else:
+                    break
+        return choice
     elif len(playerHand) == 2 and split == False:  # can only double down on 1st 2 cards
         while True:
             choice = input('\n' + 'What would you like to do?' + '\n' +
@@ -172,7 +186,7 @@ gameIsPlaying = True
 split = False
 while gameIsPlaying == True:
     print(str('').center(70, '*') + "\n" +
-          str("Welcome to BlackJack!").center(70, '*') + "\n" +
+          str("   Welcome to BlackJack!   ").center(70, '*') + "\n" +
           str().center(70, '*'))
     numDecks = deckQty()
     deck = buildDeck(numDecks)
@@ -181,7 +195,7 @@ while gameIsPlaying == True:
     while sessionIsActive:
         if len(deck) < 20:  # if deck is running out of cards, shuffle with original amount of decks selected
             print(str('').center(70, '*') + '\n' +
-                  'Deck is low on cards... shuffling Deck.'.center(70, '*') + '\n' +
+                  '   Deck is low on cards... shuffling Deck.   '.center(70, '*') + '\n' +
                   str('').center(70, '*'))
             deck = buildDeck(numDecks)
             continue
@@ -197,19 +211,19 @@ while gameIsPlaying == True:
 
         # check hands for blackjack
         if isBlackJack(playerHand) and isBlackJack(computerHand) == False:
-            print('You have BlackJack'.center(60, '&'))
+            print('   You have BlackJack!   '.center(60, '&'))
             chipCount += int(bet * 1.5)  # blackjack pays player 1.5
             continue
         if isBlackJack(computerHand) and isBlackJack(playerHand) == False:
             print('Dealer hand: ')
             showHand(computerHand)
-            print('Dealer has BlackJack! You lose!'.center(60, '&'))
+            print('   Dealer has BlackJack! You lose!   '.center(60, '&'))
             chipCount -= int(bet)
             continue
         if isBlackJack(computerHand) and isBlackJack(playerHand):
             print('Dealer hand: ')
             showHand(computerHand)
-            print('You and Dealer have BlackJack! Hand is a Push!'.center(60, '&'))
+            print('   You and Dealer have BlackJack! Hand is a Push!   '.center(60, '&'))
             continue
 
         # playerAction
@@ -234,17 +248,35 @@ while gameIsPlaying == True:
                 continue
             elif choice == 'p' and split == False:
                 split = True
-                print('You have split your ' + str(playerHand[0]) + "s.")
-                print("Playing on first " + str(playerHand[0]) + ".")
+                if playerHand[0] == '1':
+                    print('You have split your Aces.')
+                    print("Playing on first Ace.")
+                else:
+                    print('You have split your ' + str(playerHand[0]) + "'s.")
+                    print("Playing on first " + str(playerHand[0]) + ".")
                 playerHand_2 = []
                 playerHand_2.append(playerHand[1])
                 playerHand.remove(playerHand[1])
             else:
                 break
 
+        # final player hand value after action
+        playerTotal = checkTotal(playerHand)
+        print('You have ' + str(playerTotal) + '\n')
+        if playerTotal > 21:
+            print('You Bust!' + '\n')
+            chipCount -= int(bet)
+            print('Chip count is : ' + str(chipCount))
+            if split == False:
+                continue
+
+        #if split, play 2nd hand
         if split == True:
             print('\n')
-            print("Playing on second " + str(playerHand_2[0]) + ".")
+            if playerHand[0] == '1':
+                print("Playing on second Ace.")
+            else:
+                print("Playing on second " + str(playerHand_2[0]) + ".")
             pStay = False
             while (Bust(playerHand_2) == False) and (pStay == False):
                 playerTotal_2 = checkTotal(playerHand_2)
@@ -266,26 +298,16 @@ while gameIsPlaying == True:
                     continue
                 else:
                     break
-        # final player hand value after action
+
+        # final player (2nd split) hand value after action
         playerTotal = checkTotal(playerHand)
         if split == True:
-            print('First Split Hand: You have ' + str(playerTotal) + '\n')
-            if playerTotal > 21:
-                print('First Split Hand: You Bust!' + '\n')
-                chipCount -= int(bet)
-
             playerTotal_2 = checkTotal(playerHand_2)
             print('Second Split Hand: You have ' + str(playerTotal_2) + '\n')
             if playerTotal_2 > 21:
                 print('Second Split Hand: You Bust!' + '\n')
                 chipCount -= int(bet)
                 split = False
-                continue
-        else:
-            print('You have ' + str(playerTotal) + '\n')
-            if playerTotal > 21:
-                print('You Bust!' + '\n')
-                chipCount -= int(bet)
                 continue
 
         # dealerAction
@@ -312,10 +334,11 @@ while gameIsPlaying == True:
             chipCount += int(bet)
             if split == True and playerTotal_2 <= 21:
                 chipCount += int(bet)
+                split = False
             continue
 
         # check the winner
-        if split == True:
+        if split == True and playerTotal <= 21:
             if playerTotal > computerTotal:
                 print('First Split Hand: You win!' + '\n')
                 chipCount += int(bet)
@@ -325,7 +348,7 @@ while gameIsPlaying == True:
             else:
                 print("First Split Hand: Hand is a push." + '\n')
 
-            if playerTotal_2 > computerTotal:
+            if playerTotal_2 > computerTotal and playerTotal_2 <= 21:
                 print('Second Split Hand: You win!' + '\n')
                 chipCount += int(bet)
             elif playerTotal_2 < computerTotal:
