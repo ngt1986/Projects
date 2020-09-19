@@ -15,11 +15,11 @@ display_height = 1000
 
 startbutton_width = 100
 startbutton_height = 50
-startbutton_pos=[display_width*(1/4)-startbutton_width/2,display_height*(3/4)]
+startbutton_pos=[int(display_width*(1/4)-startbutton_width/2),int(display_height*(3/4))]
 
 quitbutton_width = 100
 quitbutton_height = 50
-quitbutton_pos=[display_width*(3/4)-quitbutton_width/2,display_height*(3/4)]
+quitbutton_pos=[int(display_width*(3/4)-quitbutton_width/2),int(display_height*(3/4))]
 
 #colors
 black = (0,0,0)
@@ -37,7 +37,7 @@ gray = (130,130,130)
 easy, medium, hard = 1,2,3
 pause = False
 
-DISPLAYSURF = pygame.display.set_mode((display_width,display_height))
+DISPLAYSURF = pygame.display.set_mode((int(display_width),int(display_height)))
 pygame.display.set_caption('DODGER')
 gameicon=pygame.image.load('D.png')
 pygame.display.set_icon(gameicon)
@@ -67,10 +67,10 @@ def score(elapsed_time):
 class Player():
 
     def __init__(self):
-        self.width=getPlayerDims()[0] #using PIL import
-        self.height =getPlayerDims()[1]
-        self.x=display_width/2-self.width/2
-        self.y=display_height/2-self.height/2
+        self.width=int(getPlayerDims()[0] )#using PIL import
+        self.height = int(getPlayerDims()[1])
+        self.x=int(display_width/2-self.width/2)
+        self.y=int(display_height/2-self.height/2)
         self.speed = 8
         self.delta_x = 0
         self.delta_y = 0
@@ -125,22 +125,22 @@ class Player():
     def draw(self,DISPLAYSURF):
         
         if self.direction == face_up:
-            DISPLAYSURF.blit(face_up, (self.x,self.y))
+            DISPLAYSURF.blit(face_up, (int(self.x),int(self.y)))
         if self.direction == face_down:
-            DISPLAYSURF.blit(face_down, (self.x,self.y))
+            DISPLAYSURF.blit(face_down, (int(self.x),int(self.y)))
         if self.direction == face_left:
-            DISPLAYSURF.blit(face_left, (self.x,self.y))
+            DISPLAYSURF.blit(face_left, (int(self.x),int(self.y)))
         if self.direction == face_right:
-            DISPLAYSURF.blit(face_right, (self.x,self.y))
+            DISPLAYSURF.blit(face_right, (int(self.x),int(self.y)))
         #diagonals
         if self.direction == face_upright:
-            DISPLAYSURF.blit(face_upright, (self.x,self.y))
+            DISPLAYSURF.blit(face_upright, (int(self.x),int(self.y)))
         if self.direction == face_downright:
-            DISPLAYSURF.blit(face_downright, (self.x,self.y))
+            DISPLAYSURF.blit(face_downright, (int(self.x),int(self.y)))
         if self.direction == face_upleft:
-            DISPLAYSURF.blit(face_upleft, (self.x,self.y))
+            DISPLAYSURF.blit(face_upleft, (int(self.x),int(self.y)))
         if self.direction == face_downleft:
-            DISPLAYSURF.blit(face_downleft, (self.x,self.y))
+            DISPLAYSURF.blit(face_downleft, (int(self.x),int(self.y)))
 
 #ENEMY
 class Enemy():
@@ -179,7 +179,7 @@ class Enemy():
             self.x+= self.speed
 
     def draw(self,DISPLAYSURF):
-        pygame.draw.rect(DISPLAYSURF,self.color,[self.x,self.y,self.width,self.width])
+        pygame.draw.rect(DISPLAYSURF,self.color,[int(self.x),int(self.y),int(self.width),int(self.width)])
 
 def paused():
     global pause
@@ -187,7 +187,7 @@ def paused():
     DISPLAYSURF.fill(black)
     largeText = pygame.font.SysFont("comicsansms",95,white)
     TextSurf, TextRect = text_objects("Paused", largeText,blue)
-    TextRect.center = ((display_width/2),(display_height)/2)
+    TextRect.center = ((int(display_width/2)),int((display_height)/2))
     DISPLAYSURF.blit(TextSurf, TextRect)
     while pause:
         for event in pygame.event.get():
@@ -218,12 +218,12 @@ def crash(elapsed_time):
     #play again text
     font = pygame.font.SysFont("oomicsansms",25)
     text = font.render("Click or Press P to play again... ", True, white)
-    DISPLAYSURF.blit(text, (startbutton_pos[0]-100,startbutton_pos[1]+70))
+    DISPLAYSURF.blit(text, (int(startbutton_pos[0]-100),int(startbutton_pos[1]+70)))
 
     #you crashed text
     largeText = pygame.font.SysFont("comicsansms",95,white)
     TextSurf, TextRect = text_objects("You Crashed!", largeText,blue)
-    TextRect.center = ((display_width/2),(display_height)/2)
+    TextRect.center = (int((display_width/2)),int((display_height)/2))
     DISPLAYSURF.blit(TextSurf, TextRect)
     while True:
         for event in pygame.event.get():
@@ -251,7 +251,7 @@ def button(msg,x,y,w,h,inactive_color,active_color,action,difficulty):
     
     #if mouse is over button
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
-        pygame.draw.rect(DISPLAYSURF,active_color,(x,y,w,h))
+        pygame.draw.rect(DISPLAYSURF,active_color,(int(x),int(y),int(w),int(h)))
         if click[0] and (action != None):
             if difficulty == easy:
                 action(easy)
@@ -263,10 +263,10 @@ def button(msg,x,y,w,h,inactive_color,active_color,action,difficulty):
                 action()
     #if mouse not over button      
     else:
-        pygame.draw.rect(DISPLAYSURF, inactive_color, (x,y,w,h))
+        pygame.draw.rect(DISPLAYSURF, inactive_color, (int(x),int(y),int(w),int(h)))
     smallText = pygame.font.SysFont("comicsansms", 20)
     textSurf, textRect = text_objects(msg,smallText,black)
-    textRect.center = ((x+w/2),(y+(h/2)))
+    textRect.center = ((int(x+w/2)),int((y+(h/2))))
     DISPLAYSURF.blit(textSurf, textRect)
 
 def quitgame():
@@ -296,17 +296,17 @@ def game_intro():
         #play again text
         font = pygame.font.SysFont("oomicsansms",25)
         text = font.render("Click or Press 'e' for easy...", True, gray)
-        DISPLAYSURF.blit(text, (display_width/2-100,display_height/3+165))
+        DISPLAYSURF.blit(text, (int(display_width/2-100),int(display_height/3+165)))
         font = pygame.font.SysFont("oomicsansms",25)
         text = font.render("Click or Press 'm' for medium...", True, gray)
-        DISPLAYSURF.blit(text, (display_width/2-100,display_height/3+275))
+        DISPLAYSURF.blit(text, (int(display_width/2-100),int(display_height/3+275)))
         font = pygame.font.SysFont("oomicsansms",25)
         text = font.render("Click or Press 'h' for hard...", True, gray)
-        DISPLAYSURF.blit(text, (display_width/2-100,display_height/3+385))
+        DISPLAYSURF.blit(text, (int(display_width/2-100),int(display_height/3+385)))
         
         largeText = pygame.font.SysFont("comicsansms",155)
         TextSurf, TextRect = text_objects("Dodger", largeText,blue)
-        TextRect.center = ((display_width/2),(display_height)/5)
+        TextRect.center = ((int(display_width/2)),int((display_height)/5))
         DISPLAYSURF.blit(TextSurf, TextRect)
 
         button("Easy",display_width/2-50,display_height/3+110,100,50,green, bright_green,main_loop,easy)
