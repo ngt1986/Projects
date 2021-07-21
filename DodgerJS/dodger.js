@@ -74,7 +74,7 @@ function updateGameCanvas() {
 	frameNumber += 1;
 	
 	//spawn interval in # of frames
-	spawnRate = 100;
+	spawnRate = 40;
 	spawnEnemyBlocks(spawnRate);
 
 	// stops player if movement keys not pressed.
@@ -189,7 +189,7 @@ var enemyBlocks = [];
 function spawnEnemyBlocks(interval) {
 	var dir = getRandomInt(1, 5);
 	var width = getRandomInt(30, 50);
-	var speed = getRandomInt(5,15);
+	var speed = getRandomInt(1,2);
 	
 	if ((frameNumber) % interval == 0) {
 		if (dir == 1) {
