@@ -1,1 +1,0 @@
-//  generate a random text string upon request
