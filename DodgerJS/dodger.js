@@ -87,8 +87,13 @@ function updateGameCanvas() {
 	if (gameCanvas.keys && (gameCanvas.keys[38] || gameCanvas.keys[87])) {laserDirection = "up"; playerBlock.speedY = -5;}  // up arrow or 'w'
 	if (gameCanvas.keys && (gameCanvas.keys[40] || gameCanvas.keys[83])) {laserDirection = "down"; playerBlock.speedY = 5;}  // down arrow or 's'
 	//  if spacebar pressed, fire laser
+	var laserGap = 15;  // frame difference before another laser can be fired.
 	if (gameCanvas.keys && (gameCanvas.keys[32])) {
-		spawnLaserBlock(laserDirection);
+		if (laserBlocks.length > 0 && frameNumber - laserBlocks[0].logFrame > laserGap) {
+			spawnLaserBlock(laserDirection);
+		} else if (laserBlocks.length == 0) {
+			spawnLaserBlock(laserDirection);
+		} 
 	}
 	
 	playerBlock.updatePosition();
@@ -115,6 +120,8 @@ function updateGameCanvas() {
 			laserBlocks.splice(i,1);
 		}
 	}
+	
+	
 }
 
 //  player's block
@@ -129,6 +136,7 @@ function block(width, height, color, x, y, vx, vy, entity) {
     this.x = x;
     this.y = y;    
 	this.id = entity;
+	this.logFrame = frameNumber;
 	
 	//  draw block on the canvas
 	this.updateDraw = function () {
@@ -189,7 +197,16 @@ var enemyBlocks = [];
 function spawnEnemyBlocks(interval) {
 	var dir = getRandomInt(1, 5);
 	var width = getRandomInt(30, 50);
-	var speed = getRandomInt(1,2);
+	
+	var speedIncrease = Math.floor(frameNumber / 1000);
+	var startSpeed = getRandomInt(1, 2);
+	var speed = startSpeed + speedIncrease;
+	/*
+	if (frameNumber % 50 == 0) {
+		console.log("FrameNumber: ", frameNumber);
+		console.log(Math.floor(frameNumber / 1000));
+	}
+	*/
 	
 	if ((frameNumber) % interval == 0) {
 		if (dir == 1) {
@@ -224,8 +241,7 @@ var laserBlocks = [];
 var laserDirection = "up";
 function spawnLaserBlock(laserDirection) {
 	var width = 7;
-	var speed = 15;
-	var logFrame = 0;
+	var speed = 8;
 	var laserX = playerBlock.x + playerBlock.width/2 - width/2;
 	var laserY = playerBlock.y + playerBlock.width/2 - width/2;
 	
@@ -245,7 +261,7 @@ function spawnLaserBlock(laserDirection) {
 		vx = speed;
 		vy = 0;
 	}
-	if (laserBlocks.length < 1) {
+	if (laserBlocks.length < 2) {
 		laserBlocks.push(new block(width, width, "yellow", (laserX), (laserY), vx, vy, "laser"));
 	}
 }	
