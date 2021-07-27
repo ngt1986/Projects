@@ -1,8 +1,8 @@
 //  generate a random text string upon request
 
 var express = require('express');
-
 var app = express();
+
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var bodyParser = require('body-parser');
 
@@ -13,8 +13,7 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 14162);
 app.use(express.static("public"));
-app.use('/textString', require('./textString.js'));
-
+app.use('/get-string', require('./public/textString.js'));
 
 
 app.use(function(req,res){
@@ -30,7 +29,7 @@ app.use(function(err, req, res, next){
 });
 
 app.listen(app.get('port'), function(){
-  console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
+  console.log('Express started on http://flip1.engr.oregonstate.edu:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
 
 

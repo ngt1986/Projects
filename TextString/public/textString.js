@@ -1,43 +1,40 @@
 module.exports = function() {
 	var express = require('express');
 	var router = express.Router();
-	//  Default page
-	router.get('/', function(req, res) {
-		var context = {};
-		context.results = "Press button to generate string";
-		res.render('index', context);
-	});
+
 
 
 	//  GET route to output text on screen and in response body
-	router.get('/get-string',function(req,res){
+	router.get('/',function(req,res){
 	  var context = {};
-	  var stringNum = Math.random(0,textStrings.length);
+	  var stringNum = getRandomInt(0,textStrings.length);
+	  //  console.log("stringNum: ", stringNum);
 	  context.results = textStrings[stringNum];
-	  console.log(context.results);
-	  res.render('index', context);
+	  //  console.log(context.results);
+	  res.json(context)
+	  //res.render('get-string', context);
+	  //res.json(context);
 	});
 
 
 	var textStrings = [ "Take out trash", "Walk the dog",
 					"Do homework", "Read a book", "Brush Teeth",
+					"Mop the Kitchen", "Vacuum the living room",
+					"Sweep the garage", "Cook dinner", "Clean Refrigerator",
+					"A/C Maintenance", "Pest Control Appointment", "Mow the Lawn",
+					"Workout", "Study for exams", "Take car for oil change",
+					"Get groceries", "Take cat to the vet", "Play fetch with dog",
 					
-					
-					];
 
-	function generateText() {
-		var req = new XMLHttpRequest();
-		req.open("GET", "/get-string", true);
-		req.addEventListener("load", function() {
-			if (req.status >= 200 && req.status < 400) {
-				console.log("Successful request.");
-			} else {
-				console.log("Error in request.");
-			}
-		});
-		req.send();
-		event.preventDefault();
-	}
+					];
 	
+	
+	// function to get a random integer between two values, from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+	function getRandomInt(min, max) {
+	  min = Math.ceil(min);
+	  max = Math.floor(max);
+	  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+	}
+
 	return router;
 }();
