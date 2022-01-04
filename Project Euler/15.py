@@ -7,5 +7,6 @@ def pascal(n):
             arr[i][j] = arr[i-1][j] + arr[i][j-1]
     return arr
 
-print(pascal(20))
-# print(a[-1][-1])
+a =pascal(20)
+print(a[-1][-1])
+# 137846528820.0
