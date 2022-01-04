@@ -1,11 +1,11 @@
-cache = [1, 2]
+import numpy as np
 
-n = 32
-for i in range(2,n):
-    cache.append(cache[i-1]+cache[i-2])
-sum_even_fibs = 0
-for digit in cache:
-    if digit %2 == 0:
-        sum_even_fibs+=digit
-print(sum_even_fibs)
+def pascal(n):
+    arr = np.ones((n+1,n+1))
+    for i in range(1,n+1):
+        for j in range(1,n+1):
+            arr[i][j] = arr[i-1][j] + arr[i][j-1]
+    return arr
 
+print(pascal(20))
+# print(a[-1][-1])
