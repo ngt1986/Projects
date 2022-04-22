@@ -17,9 +17,9 @@ def deckQty():
 
 
 def buildDeck(numDecks):  # construct the deck based on how many player wants to play with
-    deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 'A'] * 4 * numDecks
+    deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] * 4 * numDecks
     #deck = [2, 3, 4,'A', 'A', 'A', 'A', 'A'] * 4 * numDecks
-    deck = [str(i) for i in deck]
+    #deck = [str(i) for i in deck]
     return deck
 
 
@@ -54,7 +54,7 @@ def playerAction(playerHand, chipCount, bet):
             if choice in ['h', 's']:
                 break
         return choice
-    elif playerHand[0] == playerHand[1]:
+    elif playerHand[0] == playerHand[1] and len(playerHand) <=2:
         while True:
             choice = input('\n' + 'What would you like to do?' + '\n' +
                            '(H = hit, S = stand, P = Split, D = Double down): ').lower()
@@ -62,13 +62,13 @@ def playerAction(playerHand, chipCount, bet):
                 if choice == 'd' and (bet + bet > chipCount):  # can't double if you don't have the dough
                     print('Insufficient chips to Double Down!')
                     continue
-                elif choice == 'p' and (bet + bet > chipCount):  # can't double if you don't have the dough
+                elif choice == 'p' and (bet + bet > chipCount):  # can't split if you don't have the dough
                     print('Insufficient chips to Split!')
                     continue
                 else:
                     break
         return choice
-    elif playerHand == ['1','A'] and split == False: # special case for [A,A] since checkTotal has some weird ace logic in there
+    elif playerHand == ['1','1'] and split == False: # special case for [A,A] since checkTotal has some weird ace logic in there
         while True:
             choice = input('\n' + 'What would you like to do?' + '\n' +
                            '(H = hit, S = stand, P = Split, D = Double down): ').lower()
@@ -106,26 +106,20 @@ def checkTotal(hand):
     HandTotal = 0
     while True:
         for i in hand:
-            if (i != 'A'):  # if not an ace, add the value of the card
-                if (HandTotal + int(i) > 21) and ('A' in hand):
+            if (i != 1):  # if not an ace, add the value of the card
+                if (HandTotal + int(i) > 21) and (1 in hand):
                     # if value of card puts total above 21, and there is an ace in hand,
                     # then add card value, subtract 10, and change ace to value 1.
                     HandTotal += int(i) - 10
-                    aceLocation = hand.index('A')
-                    hand.insert(aceLocation, '1')
-                    hand.remove('A')
                     continue
                 else:  # add value of the card
                     HandTotal += int(i)
             else:  # if card is an ace...
                 if HandTotal + 11 > 21:
                     HandTotal += 1
-                    aceLocation = hand.index('A')
-                    hand.insert(aceLocation, '1')
-                    hand.remove('A')
                 else:
                     HandTotal += 11
-        if ('A' in hand) and (HandTotal > 21):
+        if (1 in hand) and (HandTotal > 21):
             continue
         else:
             break
@@ -143,7 +137,7 @@ def Hit(deck, playerHand):
 def Bust(hand):
     value = 0
     for i in hand:
-        if (i == 'A'):
+        if (i == 1):
             value = value + 1
         else:
             value = value + int(i)
@@ -154,11 +148,14 @@ def Bust(hand):
 
 def showHand(hand):
     for i in hand:
-        print(i)
+        if i == 1:
+            print('A')
+        else:
+            print(i)
 
 
 def isBlackJack(hand):
-    if ('A' in hand) and ('10' in hand):
+    if (1 in hand) and (10 in hand):
         return True
     else:
         return False
@@ -206,13 +203,17 @@ while gameIsPlaying == True:
         bet = placeBet()
         playerHand = dealPlayerHand(deck)
         computerHand = dealComputerHand(deck)
-        print("\n" + "Dealer's Up Card is: " + str(computerHand[0]) + "\n")
-        print("Your Hand: ")
+        if computerHand[0] == 1:
+            print("\n" + "Dealer's Up Card is: A" + "\n")
+        else:
+            print("\n" + "Dealer's Up Card is: " + str(computerHand[0]) + "\n")
+            print("Your Hand: ")
         showHand(playerHand)
 
         # check hands for blackjack
         if isBlackJack(playerHand) and isBlackJack(computerHand) == False:
             print('   You have BlackJack!   '.center(60, '&'))
+            print('   (Dealer did not have blackjack)'.center(60, '&'))
             chipCount += int(bet * 1.5)  # blackjack pays player 1.5
             continue
         if isBlackJack(computerHand) and isBlackJack(playerHand) == False:
@@ -274,7 +275,7 @@ while gameIsPlaying == True:
         #if split, play 2nd hand
         if split == True:
             print('\n')
-            if playerHand[0] == '1':
+            if playerHand_2[0] == 1:
                 print("Playing on second Ace.")
             else:
                 print("Playing on second " + str(playerHand_2[0]) + ".")
